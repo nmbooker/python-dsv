@@ -10,7 +10,9 @@ import dsv
 
 def main(options):
     """Main program."""
-    csv.writer(sys.stdout).writerows(csv.reader(sys.stdin, dialect=dsv.DSVDialect))
+    csv.writer(sys.stdout).writerows(
+        csv.reader(sys.stdin, dialect=dsv.DSVDialect)
+    )
     return
 
 def get_options():

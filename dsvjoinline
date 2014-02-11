@@ -1,0 +1,51 @@
+#! /usr/bin/env python
+
+"""Join arguments together into a line.
+"""
+
+import sys
+import argparse
+import csv
+import dsv
+
+def main(options):
+    """Main program."""
+    values = options.values
+    if options.escape:
+        values = map(interpret_escapes, values)
+    csv.writer(sys.stdout, dialect=dsv.DSVDialect).writerow(values)
+    if options.cons:
+        sys.stdout.writelines(sys.stdin)
+    return
+
+def interpret_escapes(string):
+    r"""Interpret escape characters \n and \\"""
+    outchars = []
+    lastchar = None
+    for char in string:
+        if lastchar == '\\':
+            if char == 'n':
+                outchars.append("\n")
+            elif char == '\\':
+                outchars.append("\\")
+            else:
+                outchars.append('\\' + char)
+        else:
+            if char != '\\':
+                outchars.append(char)
+        lastchar = char
+    return ''.join(outchars)
+
+def get_options():
+    """Get options for the script."""
+    parser = argparse.ArgumentParser(
+               description="join arguments together into a DSV line",
+             )
+    parser.add_argument('-e', '--escape', action='store_true', help=r'interpret escape sequences \n and \\')
+    parser.add_argument('-c', '--cons', action='store_true', help=r'print the line, then cat stdin to stdout')
+    parser.add_argument('values', nargs='*', help='the values to put on the line')
+    options = parser.parse_args()
+    return options
+
+if __name__ == "__main__":
+    main(get_options())

@@ -14,8 +14,6 @@ def main(options):
     if options.escape:
         values = map(interpret_escapes, values)
     csv.writer(sys.stdout, dialect=dsv.DSVDialect).writerow(values)
-    if options.cons:
-        sys.stdout.writelines(sys.stdin)
     return
 
 def interpret_escapes(string):
@@ -42,7 +40,6 @@ def get_options():
                description="join arguments together into a DSV line",
              )
     parser.add_argument('-e', '--escape', action='store_true', help=r'interpret escape sequences \n and \\')
-    parser.add_argument('-c', '--cons', action='store_true', help=r'print the line, then cat stdin to stdout')
     parser.add_argument('values', nargs='*', help='the values to put on the line')
     options = parser.parse_args()
     return options

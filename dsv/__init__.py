@@ -1,5 +1,10 @@
 #! /usr/bin/env python
 
+"""Contains the DSV dialect for Python's CSV module
+
+Should also be compatible with the oekit.unicsv module too.
+"""
+
 import csv
 
 class DSVDialect:

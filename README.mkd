@@ -1,0 +1,65 @@
+# dsv
+
+Simple tools for dealing with, converting and manipulating data in
+Delimiter Separated Values format.
+
+## Python library
+
+The Python library 'dsv' is currently just a dialect for use with Python's own
+'csv' library, and should work with the libraries in 'csvkit' (on PyPI) too.
+
+    import sys
+    import csv
+    import dsv
+    writer = csv.writer(sys.stdout, dialect=dsv.DSVDialect)
+    reader = csv.reader(sys.stdin, dialect=dsv.DSVDialect)
+
+## Utilities
+
+### dsv2csv
+
+Takes DSV on standard input, and outputs in Excel-format CSV
+(Python's default dialect) on stdout.
+
+    cat /etc/passwd | dsv2csv > passwd.csv
+
+### dsvjoinline
+
+    $ dsvjoinline fred 1000 1000 x "Fred Bloggs" /home/fred /bin/bash
+    fred:1000:1000:x:Fred Bloggs:/home/fred:/bin/bash
+
+dsvjoinline also takes two options:
+    -e     Allows you to embed newline characters in fields, using "\n".
+           Literal backslashes must also be escaped, thus: "\\"
+           Long: --escape
+
+           It's -e because that's the name of the switch the echo(1) command uses.
+
+## Making useful CSV files
+
+In order to use tools that manipulating CSV files, such as those provided by
+'csvkit', you probably want to prepend a line.
+
+Use '(dsvjoinline ... ; cat)' in a your pipeline for that.
+
+Here's an example, which takes /etc/passwd, prepends a header row, converts it to
+CSV then pretty-prints the contents in a grid on the terminal:
+
+    cat /etc/passwd | (dsvjoinline username uid gid passwd fullname homedir shell ; cat) | dsv2csv | csvlook
+
+## Why DSV?
+
+DSV is simpler to parse than CSV, and simpler to read.
+
+It uses a simple escape character to annul the effects of field and record
+separators, rather than complex escaping rules.
+
+In the simple case, where there aren't escaped versions, it's also simpler to use
+Unix tools like cut(1), awk(1), sed(1) etc to parse these than CSV.
+
+Besides, there are lots of files in this format, particularly on Unix and GNU systems:
+ /etc/passwd
+ /etc/group
+ /etc/shadow
+ /etc/inittab (for System V init)
+

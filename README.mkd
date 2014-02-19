@@ -63,3 +63,10 @@ Besides, there are lots of files in this format, particularly on Unix and GNU sy
  /etc/shadow
  /etc/inittab (for System V init)
 
+
+# Copyright and License
+
+Copyright (c) 2014 Nicholas Martin Booker <NMBooker@gmail.com>
+
+License is the GPL version 2 or higher, see the LICENSE file for
+the full license terms.
